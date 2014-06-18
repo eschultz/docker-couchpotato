@@ -3,18 +3,16 @@ MAINTAINER Eric Schultz <eric@startuperic.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN locale-gen en_US en_US.UTF-8
+
 RUN apt-get update -q
-RUN apt-get install -qy --force-yes git-core
-RUN apt-get install -qy python
+RUN apt-get install -qy --force-yes git-core python
 RUN git clone https://github.com/RuudBurger/CouchPotatoServer.git /opt/couchpotato
 
-ADD ./startup.sh /startup.sh
-RUN chmod u+x /startup.sh
-
-# TODO: Config folder
 VOLUME /config
 VOLUME /data
 
 EXPOSE 5050
 
-ENTRYPOINT ["/startup.sh"]
+ENTRYPOINT ["python", "/opt/couchpotato/CouchPotato.py"]
+CMD ["--data_dir=/config"]
